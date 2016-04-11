@@ -9,4 +9,7 @@
         </div>
         <h1>{{ post.title }}</h1>
         <p>{{ post.text|linebreaks }}</p>
+        {% for comment in comments %}
+            {{comment.text}}
+        {% endfor %}
     {% endblock %}
