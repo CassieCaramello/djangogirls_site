@@ -1,10 +1,13 @@
 {% load crispy_forms_tags %}
     <h1>{{ post.title }}</h1>
         <p>{{ post.text|linebreaks }}</p>
+        <p><b> Creado el: </b> {{post.created_date}}</p>
+        <hr>
         <h1> Comentarios </h1>
         {% for comment in comments %}
-            {{comment.text}}
-            {{comment.created_date}}
+            <p> <b>Comentario Realizado por:</b> {{comment.author}}</p>
+            <p>{{comment.text}}</p>
+            <p>{{comment.created_date}}</p>
             <hr>
         {% endfor %}
         {% if user.is_authenticated %}
