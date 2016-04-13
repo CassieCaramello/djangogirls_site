@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from .models import Post, Comment
 from .forms import PostForm, CommentForm
+from django.contrib.auth.decorators import login_required
 
 
 def post_list(request):
@@ -9,7 +10,7 @@ def post_list(request):
     return render(request, 'blog/post_list.html', {'posts': posts})
 
 
-def post_detail(request, pk): 
+def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
     comments = Comment.objects.filter(post=post).order_by('created_date')
     
@@ -17,16 +18,21 @@ def post_detail(request, pk):
         form = CommentForm(request.POST)
 
         if form.is_valid():
-            comment = form.save(commit=False)
-            comment.author = request.user
-            comment.post = post
-            comment.save()
-            return redirect('blog.views.post_detail', pk=post.pk)
+            if request.user.is_authenticated():
+                comment = form.save(commit=False)
+                comment.author = request.user
+                comment.post = post
+                comment.save()
+                return redirect('blog.views.post_detail', pk=post.pk)
+            else:
+                return redirect('login')
     else:
         form = CommentForm()
 
     return render(request, 'blog/post_detail.html', {'post': post, 'comments': comments, 'form':form})
-    
+
+
+@login_required(login_url='login')    
 def post_new(request):
     if request.method == "POST":
         form = PostForm(request.POST)
@@ -39,7 +45,7 @@ def post_new(request):
         form = PostForm()
     return render(request, 'blog/post_edit.html', {'form': form})
 
-
+@login_required(login_url='login')
 def post_edit(request, pk):
     post = get_object_or_404(Post, pk=pk)
     if request.method == "POST":
@@ -53,6 +59,7 @@ def post_edit(request, pk):
         form = PostForm(instance=post)
     return render(request, 'blog/post_edit.html', {'form': form})
 
+@login_required(login_url='login')
 def post_delete(request, pk):
     post = get_object_or_404(Post, pk=pk)
     post.delete()
