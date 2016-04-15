@@ -24,7 +24,10 @@
 
                     <a type="button" class="btn btn-success glyphicon glyphicon-user navbar-btn navbar-right" href="{% url 'login' %}"> Login</a></button>
                 {% endif %}
-                <a type="button" class="btn btn-warning glyphicon glyphicon-info-sign navbar-btn navbar-right" href="{% url 'about' %}"> About</a></button>
+                <a type="button" class="btn btn-info glyphicon glyphicon-info-sign navbar-btn navbar-right" href="{% url 'about' %}"> About</a></button>
+
+                <a type="button" class="btn btn-warning glyphicon glyphicon-plus navbar-btn navbar-right" href="{% url 'blog.views.post_new' %}"> New Post</a></button>
+
                 </div>
                 </div>
             </nav>
