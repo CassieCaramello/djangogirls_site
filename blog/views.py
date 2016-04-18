@@ -88,8 +88,14 @@ class PostEdit(UpdateView):
 #         form = PostForm(instance=post)
 #     return render(request, 'blog/post_edit.html', {'form': form})
 
-@login_required(login_url='login')
-def post_delete(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-    post.delete()
-    return redirect ('post_list')
+
+class PostDelete(DeleteView):
+    model = Post
+    def get_success_url(self):
+        return reverse ('post_list')
+
+# @login_required(login_url='login')
+# def post_delete(request, pk):
+#     post = get_object_or_404(Post, pk=pk)
+#     post.delete()
+#     return redirect ('post_list')
