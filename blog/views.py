@@ -6,7 +6,13 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView
 
+class LoginRequiredMixin(object):
+    @classmethod
+    def as_view(cls, **initkwargs):
+        view = super(LoginRequiredMixin, cls).as_view(**initkwargs)
+        return login_required(view, login_url='login')
 
+        
 class PostList(ListView):
     model = Post
     context_object_name = 'posts'
@@ -89,7 +95,7 @@ class PostEdit(UpdateView):
 #     return render(request, 'blog/post_edit.html', {'form': form})
 
 
-class PostDelete(DeleteView):
+class PostDelete(LoginRequiredMixin, DeleteView):
     model = Post
     def get_success_url(self):
         return reverse ('post_list')
@@ -99,3 +105,4 @@ class PostDelete(DeleteView):
 #     post = get_object_or_404(Post, pk=pk)
 #     post.delete()
 #     return redirect ('post_list')
+
